@@ -15,9 +15,10 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   tf2_ros
   message_generation
+  zed_interfaces
 )
 
-find_package(OpenCV 3 REQUIRED)
+find_package(OpenCV 4 REQUIRED)
 
 ## Generate services in the 'srv' folder
  add_service_files(
@@ -25,12 +26,19 @@ find_package(OpenCV 3 REQUIRED)
    box_and_target_position.srv
  )
 
+# add_message_files(
+#   FILES
+#   StringArray.msg
+# )
+
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
    DEPENDENCIES
    std_msgs  # Or other packages containing msgs
    geometry_msgs
  )
+
+
 
 catkin_package(
   INCLUDE_DIRS
@@ -57,6 +65,12 @@ add_executable(opencv_extract_object_positions src/opencv_extract_object_positio
 
 add_dependencies(opencv_extract_object_positions opencv_services_generate_messages_cpp)
 
+add_executable(opencv_testing src/opencv_testing.cpp)
+
+add_dependencies(opencv_testing opencv_services_generate_messages_cpp)
+
 ## Specify libraries to link a library or executable target against
 target_link_libraries(opencv_extract_object_positions ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(opencv_testing ${catkin_LIBRARIES} ${OpenCV_LIBS})
+
 
