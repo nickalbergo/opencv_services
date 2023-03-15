@@ -2,20 +2,16 @@
   * OpenCV Example using ROS and CPP
   */
 
-// C
-#include <cstdlib>
-
 // Include the ROS library
 #include <ros/ros.h>
 #include <opencv_services/StringArray.h>
-#include <opencv_services/PointList.h>
 
  // Include opencv2
 //#include <opencv2/core/mat.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
-#include "opencv2/video/background_segm.hpp"
+#include <opencv2/video/background_segm.hpp>
 #include <opencv2/tracking.hpp>
 #include <opencv2/videoio.hpp>
 #include <opencv2/video.hpp>
@@ -314,48 +310,29 @@ bool get_predicted_joints(opencv_services::predicted_joints::Request  &req,
 int main(int argc, char **argv)
 {
   // The name of the node
-  ros::init(argc, argv, "opencv_testing");
+  ros::init(argc, argv, "service_testing");
    
   // Default handler for nodes in ROS
   ros::NodeHandle nh("");
 
     // Used to publish and subscribe to images
-  // image_transport::ImageTransport it(nh);
+  image_transport::ImageTransport it(nh);
 
     // Subscribe to the /camera raw image topic
-  // image_transport::Subscriber image_sub = it.subscribe(IMAGE_TOPIC, 1, image_cb);
-  //tf2_ros::TransformListener listener(tf_buffer);
+  image_transport::Subscriber image_sub = it.subscribe(IMAGE_TOPIC, 1, image_cb);
+  tf2_ros::TransformListener listener(tf_buffer);
 
   // service stuff
-  // ros::ServiceServer service = nh.advertiseService("predicted_joints",  get_predicted_joints);
-  // ros::spin();
+  ros::ServiceServer service = nh.advertiseService("predicted_joints",  get_predicted_joints);
+  ros::spin();
 
   // publisher stuff
   // bool send = true;
   // int x = 1;
 
-  // ros::Publisher pub = nh.advertise<std_msgs::String>("command", 1000);
+  // // ros::Publisher pub = nh.advertise<std_msgs::String>("command", 1000);
   //ros::Publisher pub = nh.advertise<opencv_services::StringArray>("command", 1000);
-  ros::Publisher pub = nh.advertise<opencv_services::PointList>("predicted_points", 1000);
-  
-  while (ros::ok())
-  {
-    opencv_services::PointList plist;
 
-    for (unsigned x = 0; x < 3; ++x)
-    {
-      geometry_msgs::Point p;
-      double rx, ry, rz;
-      p.x = ((double) std::rand() / (RAND_MAX));
-      p.y = ((double) std::rand() / (RAND_MAX));
-      p.z = ((double) std::rand() / (RAND_MAX));
-      plist.points.push_back(p);
-    }
-
-    pub.publish(plist);
-
-    ros::spinOnce();
-  }
   // while (ros::ok())
   // {
   //   // std_msgs::String msg;
@@ -363,19 +340,26 @@ int main(int argc, char **argv)
   //   std::stringstream ss1;
   //   std::stringstream ss2;
   //   std::stringstream ss3;
-  //   std::stringstream ss4;
 
   //   ss1 << "hello";
   //   ss2 << "goodbye";
   //   ss3 << "test";
-  //   ss4 << "aksngjlasbg";
 
   //   msg.strings.push_back(ss1.str());
   //   msg.strings.push_back(ss2.str());
   //   msg.strings.push_back(ss3.str());
-  //   msg.strings.push_back(ss4.str());
 
-  //   pub.publish(msg);
+  //     if (send)
+  //     {
+  //       pub.publish(msg);
+  //       send = false;
+  //     }
+
+  //     if (x % 1000 == 0)
+  //     {
+  //       send = true;
+  //       x = 0;
+  //     }
 
   //   ros::spinOnce();
   // }
@@ -396,7 +380,7 @@ int main(int argc, char **argv)
   //ros::spin();
    
   // Close down OpenCV
-  //cv::destroyWindow("frame");
+  cv::destroyWindow("frame");
 }
 
  
