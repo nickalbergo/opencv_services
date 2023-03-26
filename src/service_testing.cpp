@@ -27,7 +27,6 @@
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Pose.h>
-#include <std_msgs/String.h>
 #include <sensor_msgs/JointState.h>
 
 // Include tf2 for transformation
