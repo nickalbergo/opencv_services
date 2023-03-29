@@ -106,12 +106,12 @@ def image_callback(img_msg):
                         if ((current_pixel < adjusted_depth) and (current_pixel != 0)):
                             adjusted_depth = current_pixel
 
-            if ((adjusted_depth != math.inf) and (within_tolerance(adjusted_depth))):
+            if (adjusted_depth != math.inf): # and (within_tolerance(adjusted_depth))):
                 # print("Depth at " + str(center) + ": " + str(depth_map[center[1]][center[0]]))
-                print("Depth at " + str(center) + ": " + str(adjusted_depth))
                 #print("Average: " + str(mean(recent_depths)))
                 c = Point(center[0], center[1], adjusted_depth)
                 pub.publish(c)
+            print("Depth at " + str(center) + ": " + str(adjusted_depth))
 
             recent_depths.append(adjusted_depth)     
 
@@ -126,14 +126,17 @@ def image_callback(img_msg):
             for i, (new, old) in enumerate(zip(good_new, good_old)):
                 a, b = new.ravel()
                 c, d = old.ravel()
+                #print (str(a) + " " + str(b) + " " + str(c) + " " + str(d))
+                
                 if (abs(a - c) < 0.2 or abs(b - d) < 0.2):
                     continue
-                cv2.line(cv_image, (a, b), (c, d), (0,0,255), 2)
+                
+                cv2.line(cv_image, (a, b), (c, d), (0,0,255), 1)
                 #cv2.circle(cv_image, (a, b), 5, (0,0,255)),
     
             #p0 = good_new.reshape(-1, 1, 2)
                                    
-    cv2.imshow("yo", cv_image)
+    cv2.imshow("test", cv_image)
 
     k = cv2.waitKey(30) & 0xff
     if k == 27:
